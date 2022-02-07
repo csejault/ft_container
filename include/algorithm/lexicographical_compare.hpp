@@ -6,9 +6,12 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 11:16:53 by csejault          #+#    #+#             */
-/*   Updated: 2022/02/07 12:02:55 by csejault         ###   ########.fr       */
+/*   Updated: 2022/02/07 15:32:49 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef LEXICOGRAOHICAL_COMPARE_HPP
+#define LEXICOGRAOHICAL_COMPARE_HPP
 
 namespace ft {
 	template<class InputIt1, class InputIt2>
@@ -34,3 +37,4 @@ namespace ft {
 			return (first1 == last1) && (first2 != last2);
 		}
 }
+#endif
