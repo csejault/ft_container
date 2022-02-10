@@ -6,7 +6,7 @@
 #    By: csejault <csejault@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/11 11:59:05 by csejault          #+#    #+#              #
-#    Updated: 2022/02/07 16:50:46 by csejault         ###   ########.fr        #
+#    Updated: 2022/02/08 16:21:22 by csejault         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ NAME			=	ft_containers
 
 SOURCES_DIR		=	srcs/
 
-INCLUDES		= 	-I include
+INCLUDES		= 	-I include -I .
 
 DEFINE_STD		=	-D LIB_TO_USE=std -D LIB_TO_USE_STR="std"
 

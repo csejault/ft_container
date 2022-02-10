@@ -1,23 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tests.cpp                                          :+:      :+:    :+:   */
+/*   ft_containers.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/02/07 16:36:18 by csejault         ###   ########.fr       */
+/*   Updated: 2022/02/09 18:07:14 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_containers.hpp"
 #include <utility>      // std::pair, std::make_pair
-#include "utility.hpp"
 #include <algorithm>    // std::lexicographical_compare std::equal
-#include "algorithm.hpp"
 #include <string>       // std::string
 #include <vector>       // std::vector
 #include <iostream>     // std::cout, std::boolalpha
 #include <cctype>       // std::tolower
+
+void	print_title(std::string to_print)
+{
+	int i = -1 ;
+	while ( ++i < static_cast<int>(to_print.size()))
+		std::cout << "#";
+	std::cout << std::endl;
+	std::cout << "LIB_NAME = ft - " <<  to_print << " - CHECK" << std::endl;
+	i = 1;
+	while ( ++i < static_cast<int>(to_print.size()))
+		std::cout << "#";
+	std::cout << std::endl;
+}
 
 bool mypredicate (int i, int j) {
 	return (i==j);
@@ -36,6 +48,7 @@ int main ()
 	//            //
 	////////////////
 
+	print_title("Pair");
 	LIB::pair <std::string,double> product1;                     // default constructor
 	LIB::pair <std::string,double> product2 ("tomatoes",2.30);   // value init
 	LIB::pair <std::string,double> product3 (product2);          // copy constructor
@@ -49,14 +62,16 @@ int main ()
 	std::cout << "The price of " << product2.first << " is $" << product2.second << '\n';
 	std::cout << "The price of " << product3.first << " is $" << product3.second << '\n';
 
-	
+
 	///////////
 	//       //
 	// Equal //
 	//       //
 	///////////
-	
-	int myints[] = {20,40,60,80,100};               //   myints: 20 40 60 80 100
+
+	print_title("Equal");
+	int myints[] = {
+		20,40,60,80,100};               //   myints: 20 40 60 80 100
 	std::vector<int>myvector (myints,myints+5);     // myvector: 20 40 60 80 100
 
 	// using default comparison:
@@ -73,13 +88,15 @@ int main ()
 	else
 		std::cout << "The contents of both sequences differ.\n";
 
-	
+
 	/////////////////////////////
 	//                         //
 	// Lexicographical_compare //
 	//                         //
 	/////////////////////////////
 	
+	print_title("Lexicographical_compare");
+
 	char foo[]="Apple";
 	char bar[]="apartment";
 
@@ -95,5 +112,18 @@ int main ()
 	std::cout << LIB::lexicographical_compare(foo,foo+5,bar,bar+9,mycomp);
 	std::cout << '\n';
 
+	
+	////////////////////////////
+	//                        //
+	// Random_access_iterator //
+	//                        //
+	////////////////////////////
+
+	print_title("Random_access_iterator");
+	print_title("TO_UPGRADE");
+	
+	std::vector<int>v1(5,5);
+	std::vector<int>v2(10,10);
+	std::cout << v1.end() - v1.begin() << std::endl;
 	return 0;
 }
