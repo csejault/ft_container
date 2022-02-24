@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/02/09 18:07:14 by csejault         ###   ########.fr       */
+/*   Updated: 2022/02/23 18:34:58 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,18 @@
 #include <iostream>     // std::cout, std::boolalpha
 #include <cctype>       // std::tolower
 
+namespace LIB = ft;
+
 void	print_title(std::string to_print)
 {
-	int i = -1 ;
-	while ( ++i < static_cast<int>(to_print.size()))
+	int i = 0;
+	std::cout << std::endl;
+	while ( ++i < 10)
 		std::cout << "#";
 	std::cout << std::endl;
 	std::cout << "LIB_NAME = ft - " <<  to_print << " - CHECK" << std::endl;
-	i = 1;
-	while ( ++i < static_cast<int>(to_print.size()))
+	i = 0;
+	while ( ++i < 10 )
 		std::cout << "#";
 	std::cout << std::endl;
 }
@@ -35,11 +38,22 @@ bool mypredicate (int i, int j) {
 	return (i==j);
 }
 
+void print_vector(LIB::vector<int> vct)
+{
+	LIB::vector<int>::iterator it = vct.begin();
+	int i = 0;
+	while (it != vct.end())
+	{
+		std::cout << i << " = " << *it << std::endl;
+		i++;
+		it++;
+	}
+}
+
 // a case-insensitive comparison function:
 bool mycomp (char c1, char c2)
 { return std::tolower(c1)<std::tolower(c2); }
 
-namespace LIB = ft;
 int main ()
 {
 	////////////////
@@ -94,7 +108,7 @@ int main ()
 	// Lexicographical_compare //
 	//                         //
 	/////////////////////////////
-	
+
 	print_title("Lexicographical_compare");
 
 	char foo[]="Apple";
@@ -112,7 +126,7 @@ int main ()
 	std::cout << LIB::lexicographical_compare(foo,foo+5,bar,bar+9,mycomp);
 	std::cout << '\n';
 
-	
+
 	////////////////////////////
 	//                        //
 	// Random_access_iterator //
@@ -121,9 +135,77 @@ int main ()
 
 	print_title("Random_access_iterator");
 	print_title("TO_UPGRADE");
-	
+
 	std::vector<int>v1(5,5);
 	std::vector<int>v2(10,10);
 	std::cout << v1.end() - v1.begin() << std::endl;
+
+
+	////////////
+	//        //
+	// Vector //
+	//        //
+	////////////
+
+	print_title("Vector");
+	LIB::vector<int> vi(50,12);
+
+//	std::cout << "vi - max_size() : " << vi.max_size() << std::endl;
+//	std::cout << "vi - size() : " << vi.size() << std::endl;
+//	std::cout << "vi - capacity() : " <<vi.capacity() << std::endl;
+//
+//	LIB::vector<int> va;
+//	va.push_back(5);
+//	std::cout << "va - max_size() : " << va.max_size() << std::endl;
+//	std::cout << "va - size() : " << va.size() << std::endl;
+//	std::cout << "va - capacity() : " <<va.capacity() << std::endl;
+//
+//	LIB::vector<int> vb(va);
+//	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
+//	std::cout << "vb - size() : " << vb.size() << std::endl;
+//	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
+//	vb = va;
+//	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
+//	std::cout << "vb - size() : " << vb.size() << std::endl;
+//	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
+//	vb = vi;
+//	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
+//	std::cout << "vb - size() : " << vb.size() << std::endl;
+//	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
+//	vb.clear();
+//	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
+//	std::cout << "vb - size() : " << vb.size() << std::endl;
+//	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
+//
+//	try {
+//		std::cout << "vi - acces_ok : " << vi.at(vi.capacity() -1) << std::endl;
+//		std::cout << "vb - bad_acces : " << vb.at(vb.capacity()) << std::endl;
+//	}
+//	catch ( std::exception &e)
+//	{
+//		std::cerr << "EXCEPTION CATCHED - > " << e.what() << std::endl;
+//	}
+//
+//	std::cout << "vi - operator [3] : " << vi[3] << std::endl;
+//	vi[3] += 30;
+//	std::cout << "vi - operator [3] after new assign : " << vi[3] << std::endl;
+//
+//	std::cout << "vi - int &ref = vi.front() = " << vi.front() << std::endl;
+//	int &ref = vi.front();
+//	ref = 0;
+//	std::cout << "vi - vi.front() after ref = 0 = " << vi.front() << std::endl;
+//
+//	std::cout << "back on vi = " << vi.back() << std::endl;
+//	int & ref2 = vi.back();
+//	ref2 = 666;
+//	std::cout << "back on vi after changing value = " << vi.back() << std::endl;
+//
+	LIB::vector<int>::iterator it = vi.begin();
+	it += 3;
+	vi.insert(it, 44444);
+	print_vector(vi);
+
+	
 	return 0;
+
 }
