@@ -6,13 +6,14 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 16:59:58 by csejault          #+#    #+#             */
-/*   Updated: 2022/02/23 18:48:43 by csejault         ###   ########.fr       */
+/*   Updated: 2022/02/28 19:25:37 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
+#include "type_traits.hpp"
 #include <memory>
 #include <stdexcept>
 #include <limits>
@@ -43,6 +44,17 @@ namespace ft {
 				//typedef const_reverse_iterator;
 
 
+
+
+				//enable if and is !integral
+				template <class InputIterator>
+					vector(InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last, const allocator_type& alloc_arg = allocator_type()) : elem(NULL), sz(0), space(0), alloc(alloc_arg)
+				{
+					for (InputIterator it = first; it != last; it++)
+						push_back(*it);
+				}
+
+
 				/////////////////
 				//             //
 				// CONSTRUCTOR //
@@ -51,24 +63,33 @@ namespace ft {
 
 				explicit vector(const allocator_type& alloc_arg = allocator_type()) : elem(NULL), sz(0), space(0), alloc(alloc_arg) { }
 
-				explicit vector(size_type n, const value_type& value = value_type(), const allocator_type& allocator_arg = allocator_type()) : elem(NULL), sz(n), space(n), alloc(allocator_arg)
+				explicit vector(size_type n, const value_type& value = value_type(), const allocator_type& allocator_arg = allocator_type()) : elem(NULL), sz(0), space(0), alloc(allocator_arg)
 			{
-				elem = alloc.allocate(n);
 				for (size_type i = 0 ; i < n; i++)
-					alloc.construct(&elem[i], value);
+					push_back(value);
 			}
 
 				vector(const vector& x) : elem(NULL), sz(0), space(0) { *this = x; }
 
-				//enable if and is !integral
-				//				template <class InputIteratohh>
-				//					vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
+
+				////////////////
+				//            //
+				// DESTRUCTOR //
+				//            //
+				////////////////
 
 				~vector()
 				{
-					if (elem)
-						alloc.deallocate(elem, space);
+					clear();
+					alloc.deallocate(elem, space);
 				}
+
+
+				//////////////
+				//          //
+				// OPERATOR //
+				//          //
+				//////////////
 
 				vector<T, Allocator>& operator=(const vector<T, Allocator>& x)
 				{
@@ -95,6 +116,13 @@ namespace ft {
 				}
 
 
+				///////////////////
+				//               //
+				// GET_ALLOCATOR //
+				//               //
+				///////////////////
+
+
 				////////////////////
 				//                //
 				// ELEMENT ACCESS //
@@ -108,7 +136,7 @@ namespace ft {
 					return elem[pos];
 				}
 
-				const_reference at(int pos) const
+				const_reference at(size_type pos) const
 				{
 					if (!(pos < size()))
 						throw std::out_of_range(" at position out of range");
@@ -167,14 +195,52 @@ namespace ft {
 
 				size_type capacity() const { return space; }
 
+				void resize (size_type n, value_type val = value_type())
+				{
+					if (n < size())
+					{
+						for (size_type to_pop = size() - n; to_pop > 0; to_pop--)
+							pop_back();
+					}
+					else
+					{
+						for (size_type to_add = n - size(); to_add > 0; to_add--)
+							push_back(val);
+					}
+
+				}
+
 
 				///////////////
 				//           //
 				// MODIFIERS //
 				//           //
 				///////////////
-
 				//p746;
+
+				void assign( size_type count, const T& value )
+				{
+					clear();
+					for (size_type st = 0; st < count; st++)
+						push_back(value);
+				}
+
+				template <class InputIt>
+					void assign( InputIt first, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type last )
+					{
+						clear();
+						for (InputIt it = first; it != last; it++)
+							push_back(*it);
+					}
+
+				void pop_back( void )
+				{
+					if (begin() != end())
+					{
+						alloc.destroy(end() - 1);
+						sz--;
+					}
+				}
 
 				void	clear( void )
 				{
@@ -185,40 +251,45 @@ namespace ft {
 
 				iterator insert(iterator position, const_reference x = T())
 				{
-					if (!position)
-						return (NULL);
-					else if (sz==space)
-						reserve(2*space);
-
-					(void)x;
-					(void)position;
-					alloc.construct(elem + sz, back());
-					iterator it = end();
-					it--;
-					while (std::distance(begin(), position) != std::distance(begin(), it))
+					difference_type dist = std::distance(begin(), position);
+					if (dist == 0)
 					{
-						std::cout << std::distance(begin(), position) << " - ";
-						std::cout << std::distance(begin(), it) << std::endl; 
-					std::cout << it - position  << " fsdf" << std::endl;
-					it--;
+						push_back(x);
+						return (begin());
 					}
-					//	*it = *(it -1);
-					//*it = x;
+					push_back(back());
+					iterator it = end() - 1;
+					while (dist != std::distance(begin(), it))
+					{
+						*it = *(it - 1);
+						it--;
+					}
+					*it = x;
 					sz++;
 					return (it);
 				}
 
-				//void insert(iterator position, size_type n, const T& x);
-				//template <class InputIterator>
-				//	void insert(iterator position, InputIterator first, InputIterator last);
-				//void pop_back();
+				void insert( iterator pos, size_type count, const T& value )
+				{
+					iterator new_pos = pos;
+					for (size_type st = 0; st < count; st++)
+						new_pos = insert(new_pos,value);
+				}
+
+				template <class InputIterator>
+					void insert(iterator position, InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
+					{
+						iterator new_pos = position;
+						for(InputIterator it = first; it != last; it++)
+							new_pos = insert(new_pos, *it);
+					}
+
 				void erase(iterator p)
 				{
-					if (p==end()) return p;
+					if (p==end()) return;
 					for (iterator pos = p + 1; pos!=end(); ++pos)
 						*(pos-1) = *pos; 
 					--sz;
-					return p;
 				}
 				//void erase(iterator first, iterator last);
 				void push_back(const T& x)
@@ -227,7 +298,7 @@ namespace ft {
 						reserve(1);
 					else if (sz==space)
 						reserve(2*space);
-					elem[sz] = x;
+					alloc.construct(&elem[sz], x);
 					++sz;
 				}
 

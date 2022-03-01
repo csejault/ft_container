@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/02/23 18:34:58 by csejault         ###   ########.fr       */
+/*   Updated: 2022/02/28 19:17:15 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,62 +150,72 @@ int main ()
 	print_title("Vector");
 	LIB::vector<int> vi(50,12);
 
-//	std::cout << "vi - max_size() : " << vi.max_size() << std::endl;
-//	std::cout << "vi - size() : " << vi.size() << std::endl;
-//	std::cout << "vi - capacity() : " <<vi.capacity() << std::endl;
-//
-//	LIB::vector<int> va;
-//	va.push_back(5);
-//	std::cout << "va - max_size() : " << va.max_size() << std::endl;
-//	std::cout << "va - size() : " << va.size() << std::endl;
-//	std::cout << "va - capacity() : " <<va.capacity() << std::endl;
-//
-//	LIB::vector<int> vb(va);
-//	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
-//	std::cout << "vb - size() : " << vb.size() << std::endl;
-//	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
-//	vb = va;
-//	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
-//	std::cout << "vb - size() : " << vb.size() << std::endl;
-//	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
-//	vb = vi;
-//	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
-//	std::cout << "vb - size() : " << vb.size() << std::endl;
-//	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
-//	vb.clear();
-//	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
-//	std::cout << "vb - size() : " << vb.size() << std::endl;
-//	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
-//
-//	try {
-//		std::cout << "vi - acces_ok : " << vi.at(vi.capacity() -1) << std::endl;
-//		std::cout << "vb - bad_acces : " << vb.at(vb.capacity()) << std::endl;
-//	}
-//	catch ( std::exception &e)
-//	{
-//		std::cerr << "EXCEPTION CATCHED - > " << e.what() << std::endl;
-//	}
-//
-//	std::cout << "vi - operator [3] : " << vi[3] << std::endl;
-//	vi[3] += 30;
-//	std::cout << "vi - operator [3] after new assign : " << vi[3] << std::endl;
-//
-//	std::cout << "vi - int &ref = vi.front() = " << vi.front() << std::endl;
-//	int &ref = vi.front();
-//	ref = 0;
-//	std::cout << "vi - vi.front() after ref = 0 = " << vi.front() << std::endl;
-//
-//	std::cout << "back on vi = " << vi.back() << std::endl;
-//	int & ref2 = vi.back();
-//	ref2 = 666;
-//	std::cout << "back on vi after changing value = " << vi.back() << std::endl;
-//
+	std::cout << "vi - max_size() : " << vi.max_size() << std::endl;
+	std::cout << "vi - size() : " << vi.size() << std::endl;
+	std::cout << "vi - capacity() : " <<vi.capacity() << std::endl;
+
+	LIB::vector<int> va;
+	va.push_back(5);
+	std::cout << "va - max_size() : " << va.max_size() << std::endl;
+	std::cout << "va - size() : " << va.size() << std::endl;
+	std::cout << "va - capacity() : " <<va.capacity() << std::endl;
+
+	LIB::vector<int> vb(va);
+	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
+	std::cout << "vb - size() : " << vb.size() << std::endl;
+	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
+	vb = va;
+	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
+	std::cout << "vb - size() : " << vb.size() << std::endl;
+	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
+	vb = vi;
+	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
+	std::cout << "vb - size() : " << vb.size() << std::endl;
+	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
+	vb.clear();
+	std::cout << "vb - max_size() : " << vb.max_size() << std::endl;
+	std::cout << "vb - size() : " << vb.size() << std::endl;
+	std::cout << "vb - capacity() : " <<vb.capacity() << std::endl;
+
+	try {
+		std::cout << "vi - acces_ok : " << vi.at(vi.capacity() -1) << std::endl;
+		std::cout << "vb - bad_acces : " << vb.at(vb.capacity()) << std::endl;
+	}
+	catch ( std::exception &e)
+	{
+		std::cerr << "EXCEPTION CATCHED - > " << e.what() << std::endl;
+	}
+
+	std::cout << "vi - operator [3] : " << vi[3] << std::endl;
+	vi[3] += 30;
+	std::cout << "vi - operator [3] after new assign : " << vi[3] << std::endl;
+
+	std::cout << "vi - int &ref = vi.front() = " << vi.front() << std::endl;
+	int &ref = vi.front();
+	ref = 0;
+	std::cout << "vi - vi.front() after ref = 0 = " << vi.front() << std::endl;
+
+	std::cout << "back on vi = " << vi.back() << std::endl;
+	int & ref2 = vi.back();
+	ref2 = 666;
+	std::cout << "back on vi after changing value = " << vi.back() << std::endl;
+
 	LIB::vector<int>::iterator it = vi.begin();
 	it += 3;
-	vi.insert(it, 44444);
+	
+	std::cout << std::distance (vi.insert(it, 44444), vi.begin())<< std::endl;
 	print_vector(vi);
 
-	
+	LIB::vector<int> vii;
+	it = vii.begin();
+
+	std::cout << std::distance(vii.insert(it, 0), vii.begin())<< std::endl;
+	//vii.insert( it, 10 , 10);
+	print_vector(vii);
+
+	vi.resize(20);
+	print_vector(vi);
+
 	return 0;
 
 }
