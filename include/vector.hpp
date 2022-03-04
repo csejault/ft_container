@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 16:59:58 by csejault          #+#    #+#             */
-/*   Updated: 2022/02/28 19:25:37 by csejault         ###   ########.fr       */
+/*   Updated: 2022/03/04 17:52:11 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define VECTOR_HPP
 
 #include "type_traits.hpp"
+#include "iterator.hpp"
 #include <memory>
 #include <stdexcept>
 #include <limits>
@@ -40,8 +41,8 @@ namespace ft {
 				typedef typename Allocator::const_pointer	const_pointer;
 				typedef value_type*							iterator;
 				typedef const value_type*					const_iterator;
-				//typedef reverse_iterator;
-				//typedef const_reverse_iterator;
+				typedef	ft::reverse_iterator<iterator>		reverse_iterator;
+				typedef ft::reverse_iterator<const iterator>	const_reverse_iterator;
 
 
 
@@ -163,10 +164,11 @@ namespace ft {
 				const_iterator begin() const { return elem; }
 				iterator end() { return (elem + sz); }
 				const_iterator end() const { return (elem + sz); }
-				//reverse_iterator rbegin();
-				//const_reverse_iterator rbegin();
-				//reverse_iterator rend();
-				//const_reverse_iterator rend();
+
+				reverse_iterator rbegin() { return(reverse_iterator(end())); }
+				const_reverse_iterator rbegin() const { return(reverse_iterator(end())); }
+				reverse_iterator rend() { return(reverse_iterator(begin())); }
+				const_reverse_iterator rend() const { reverse_iterator(begin()); }
 
 				///////////////
 				//           //
@@ -202,7 +204,7 @@ namespace ft {
 						for (size_type to_pop = size() - n; to_pop > 0; to_pop--)
 							pop_back();
 					}
-					else
+					else if (n > size())
 					{
 						for (size_type to_add = n - size(); to_add > 0; to_add--)
 							push_back(val);
@@ -284,14 +286,28 @@ namespace ft {
 							new_pos = insert(new_pos, *it);
 					}
 
-				void erase(iterator p)
+				iterator erase(iterator p)
 				{
-					if (p==end()) return;
+					if (p==end()) return(p);
 					for (iterator pos = p + 1; pos!=end(); ++pos)
-						*(pos-1) = *pos; 
+					{
+						alloc.destroy(pos-1);
+						alloc.construct(pos - 1,*pos);
+					}
 					--sz;
+					return(p);
 				}
-				//void erase(iterator first, iterator last);
+
+				iterator erase(iterator first, iterator last)
+				{
+					size_type dist = std::distance(first, last);
+					iterator ret = first;;
+					for (; dist; dist--)
+						ret = erase(ret);
+					return(ret);
+				}
+
+
 				void push_back(const T& x)
 				{
 					if (space == 0)
