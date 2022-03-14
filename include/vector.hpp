@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 16:59:58 by csejault          #+#    #+#             */
-/*   Updated: 2022/03/04 17:52:11 by csejault         ###   ########.fr       */
+/*   Updated: 2022/03/14 19:07:47 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "type_traits.hpp"
 #include "iterator.hpp"
+#include "algorithm.hpp"
 #include <memory>
 #include <stdexcept>
 #include <limits>
@@ -254,7 +255,7 @@ namespace ft {
 				iterator insert(iterator position, const_reference x = T())
 				{
 					difference_type dist = std::distance(begin(), position);
-					if (dist == 0)
+					if (space == 0)
 					{
 						push_back(x);
 						return (begin());
@@ -263,11 +264,12 @@ namespace ft {
 					iterator it = end() - 1;
 					while (dist != std::distance(begin(), it))
 					{
-						*it = *(it - 1);
+						alloc.destroy(it);
+						alloc.construct(it, *(it - 1));
 						it--;
 					}
-					*it = x;
-					sz++;
+					alloc.destroy(it);
+					alloc.construct(it, x);
 					return (it);
 				}
 
@@ -281,9 +283,53 @@ namespace ft {
 				template <class InputIterator>
 					void insert(iterator position, InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last)
 					{
-						iterator new_pos = position;
-						for(InputIterator it = first; it != last; it++)
-							new_pos = insert(new_pos, *it);
+						size_type dist_pos = std::distance(begin(), position);
+						size_type dist_f_l = std::distance(first, last);
+						size_type old_sz = sz;
+						size_type new_space;
+						if (!space)
+							new_space = 1;
+						else
+							new_space = space;
+
+						while (sz + dist_f_l > new_space)
+							new_space *= 2;
+
+						reserve(new_space);
+
+						sz += dist_f_l;
+						for (size_type elempos = sz - 1; elempos >= dist_pos + dist_f_l; elempos--)
+						{
+							if (elempos < old_sz)
+							{
+								alloc.destroy(&elem[elempos]);
+							}
+							alloc.construct(&elem[elempos], elem[elempos - dist_f_l]);
+						}
+
+						for (size_type itpos = 0; itpos < dist_f_l; itpos++)
+						{
+							if (dist_pos + itpos < old_sz)
+								alloc.destroy(&elem[dist_pos + itpos]);
+							alloc.construct(&elem[dist_pos + itpos], *first);
+							first++;
+						}
+
+						//iterator new_pos = begin() + dist_pos;
+						//for (iterator it = end(); it != new_pos; it--)
+						//{
+						//	if (old_sz + dist_f_l <= sz)
+						//		alloc.destroy(it);
+						//	else
+						//		sz++;
+						//	alloc.construct(it, *(it - dist_f_l));
+						//}
+
+						//for (size_type to_insert = dist_f_l; to_insert > 0; to_insert--)
+						//{
+						//	alloc.destroy(new_pos + to_insert);
+						//	alloc.construct(new_pos + to_insert, *(first + to_insert));
+						//}
 					}
 
 				iterator erase(iterator p)
@@ -328,9 +374,48 @@ namespace ft {
 				size_type		space;
 				allocator_type	alloc;
 		};
-	//template <class T, class Allocator>
-	//bool operator==(const vector<T, Allocator>& x, const vector<T, Allocator>& y);
-	//template <class T, class Allocator>
-	//bool operator<(const vector<T, Allocator>& x, const vector<T, Allocator>& y);
+
+	template <class T, class Alloc>
+		bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			if (lhs.size() != rhs.size())
+				return false;
+			if (!ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()) &&
+					!ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()))
+				return (true);
+			return false;
+		}
+
+	template <class T, class Alloc>
+		bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			return (!(lhs == rhs));
+		}
+
+	template <class T, class Alloc>
+		bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		}
+
+	template <class T, class Alloc>
+		bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			return (!(lhs > rhs));
+		}
+
+
+	template <class T, class Alloc>
+		bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			return (rhs < lhs);
+		}
+
+	template <class T, class Alloc>
+		bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+		{
+			return (!(lhs < rhs));
+		}
+
 }
 #endif

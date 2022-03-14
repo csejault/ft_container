@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/02/28 19:17:15 by csejault         ###   ########.fr       */
+/*   Updated: 2022/03/14 18:02:34 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,7 @@ int main ()
 
 	LIB::vector<int>::iterator it = vi.begin();
 	it += 3;
-	
+
 	std::cout << std::distance (vi.insert(it, 44444), vi.begin())<< std::endl;
 	print_vector(vi);
 
@@ -215,6 +215,20 @@ int main ()
 
 	vi.resize(20);
 	print_vector(vi);
+
+
+	std::cout << "vinserta with input iterator" << std::endl;
+
+	LIB::vector<int> vinserta;
+	vinserta.push_back(1);
+	vinserta.push_back(2);
+	vinserta.push_back(3);
+	LIB::vector<int> vinsertb;
+	vinsertb.push_back(11);
+	vinsertb.push_back(22);
+	vinsertb.push_back(33);
+	vinserta.insert(vinserta.begin() +1, vinsertb.begin(), vinsertb.end());
+	print_vector(vinserta);
 
 	return 0;
 
