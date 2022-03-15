@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 16:59:58 by csejault          #+#    #+#             */
-/*   Updated: 2022/03/14 19:07:47 by csejault         ###   ########.fr       */
+/*   Updated: 2022/03/15 17:59:36 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,18 @@ namespace ft {
 				//         //
 				/////////////
 
-				typedef T									value_type;
-				typedef Allocator							allocator_type;
-				typedef	std::size_t							size_type;
-				typedef std::ptrdiff_t						difference_type;
-				typedef value_type&							reference;
-				typedef const value_type&					const_reference;
-				typedef typename Allocator::pointer			pointer;
-				typedef typename Allocator::const_pointer	const_pointer;
-				typedef value_type*							iterator;
-				typedef const value_type*					const_iterator;
-				typedef	ft::reverse_iterator<iterator>		reverse_iterator;
-				typedef ft::reverse_iterator<const iterator>	const_reverse_iterator;
-
-
+				typedef T										value_type;
+				typedef Allocator								allocator_type;
+				typedef	typename std::size_t					size_type;
+				typedef typename std::ptrdiff_t					difference_type;
+				typedef value_type&								reference;
+				typedef const value_type&						const_reference;
+				typedef typename Allocator::pointer				pointer;
+				typedef typename Allocator::const_pointer		const_pointer;
+				typedef value_type*								iterator;
+				typedef const value_type*						const_iterator;
+				typedef	ft::reverse_iterator<iterator>			reverse_iterator;
+				typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 
 				//enable if and is !integral
@@ -167,9 +165,9 @@ namespace ft {
 				const_iterator end() const { return (elem + sz); }
 
 				reverse_iterator rbegin() { return(reverse_iterator(end())); }
-				const_reverse_iterator rbegin() const { return(reverse_iterator(end())); }
+				const_reverse_iterator rbegin() const { return(const_reverse_iterator(end())); }
 				reverse_iterator rend() { return(reverse_iterator(begin())); }
-				const_reverse_iterator rend() const { reverse_iterator(begin()); }
+				const_reverse_iterator rend() const { const_reverse_iterator(begin()); }
 
 				///////////////
 				//           //
