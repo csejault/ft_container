@@ -1,4 +1,10 @@
-/* ************************************************************************** */
+
+//////////////////////////////////////////////////////////////////////////////////////
+//                                                                                  //
+// /* ************************************************************************** */ //
+//                                                                                  //
+//////////////////////////////////////////////////////////////////////////////////////
+
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
@@ -362,7 +368,18 @@ namespace ft {
 					++sz;
 				}
 
-				void swap(vector<T, Allocator>& x);
+				void swap(vector<T, Allocator>& x)
+				{
+					size_type tmp_sz = sz;
+					size_type tmp_space = space;
+					pointer tmp_elem = elem;
+					sz = x.sz;
+					space = x.space;
+					elem = x.elem;
+					x.sz = tmp_sz;
+					x.space =tmp_space;
+					x.elem = tmp_elem;
+				}
 
 
 
@@ -372,6 +389,12 @@ namespace ft {
 				size_type		space;
 				allocator_type	alloc;
 		};
+
+	template <class T, class Alloc>
+		void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+		{
+			x.swap(y);
+		}
 
 	template <class T, class Alloc>
 		bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
