@@ -99,26 +99,28 @@ namespace ft {
 
 				vector<T, Allocator>& operator=(const vector<T, Allocator>& x)
 				{
-					if (&x != this)
-					{
-						if (x.sz > space)
-						{
-							pointer n_elem = alloc.allocate(x.sz);
-							for (size_type i = 0; i < x.sz; i++)
-								alloc.construct(&n_elem[i], x.elem[i]);
-							alloc.deallocate(elem, space);
-							elem = n_elem;
-							space = sz = x.sz;
-						}
-						else 
-						{
-							for (size_type i = 0; i < x.sz; i++)
-								elem[i] = x.elem[i];
-							sz = x.sz;
-						}
-						alloc = x.alloc;
-					}
-					return *this;
+						if (&x != this)
+							assign(x.begin(), x.end());
+						//if (&x != this )
+						//{
+						//	if (x.sz > space)
+						//	{
+						//		pointer n_elem = alloc.allocate(x.sz);
+						//		for (size_type i = 0; i < x.sz; i++)
+						//			alloc.construct(&n_elem[i], x.elem[i]);
+						//		alloc.deallocate(elem, space);
+						//		elem = n_elem;
+						//		space = sz = x.sz;
+						//	}
+						//	else 
+						//	{
+						//		for (size_type i = 0; i < x.sz; i++)
+						//			elem[i] = x.elem[i];
+						//		sz = x.sz;
+						//	}
+						//	alloc = x.alloc;
+						//}
+						return *this;
 				}
 
 
@@ -191,14 +193,36 @@ namespace ft {
 
 				void reserve(size_type n)
 				{
+					if (n > max_size())
+						throw std::length_error("vector::reserve");
 					if (n <= space) return;
 					pointer reserve = alloc.allocate(n);
 					for (size_type i = 0; i<sz; ++i)
+					{
 						alloc.construct(&reserve[i], elem[i]);
+						alloc.destroy(&elem[i]);
+					}
 					alloc.deallocate(elem, sz);
 					elem = reserve;
 					space = n;
 				}
+
+				//void reserve (size_type n) {
+				//	if (n > this->max_size())
+				//		throw std::length_error("vector::reserve");
+				//	else if (n > space)
+				//	{
+				//		vector	tmp = *this;
+				//		clear();
+				//		alloc.deallocate(elem,space);
+				//		space = n;
+				//		elem = alloc.allocate(space);
+				//		sz = tmp.size();
+				//		for (size_type i = 0; i < sz; i++)
+				//			alloc.construct(&elem[i], tmp[i]);
+				//	}
+				//}
+
 
 				size_type capacity() const { return space; }
 
@@ -258,23 +282,18 @@ namespace ft {
 
 				iterator insert(iterator position, const_reference x = T())
 				{
-					difference_type dist = std::distance(begin(), position);
-					if (space == 0)
+					size_type	dist = std::distance(begin(), position);
+
+					reserve(sz + 1);
+
+					for (size_type st = sz; st > dist; st--)
 					{
-						push_back(x);
-						return (begin());
+						alloc.construct(&elem[st], elem[st -1]);
+						alloc.destroy(&elem[st -1]);
 					}
-					push_back(back());
-					iterator it = end() - 1;
-					while (dist != std::distance(begin(), it))
-					{
-						alloc.destroy(it);
-						alloc.construct(it, *(it - 1));
-						it--;
-					}
-					alloc.destroy(it);
-					alloc.construct(it, x);
-					return (it);
+					alloc.construct(&elem[dist], x);
+					sz++;
+					return (&elem[dist]);
 				}
 
 				void insert( iterator pos, size_type count, const T& value )
