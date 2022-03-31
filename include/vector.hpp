@@ -99,28 +99,28 @@ namespace ft {
 
 				vector<T, Allocator>& operator=(const vector<T, Allocator>& x)
 				{
-						if (&x != this)
-							assign(x.begin(), x.end());
-						//if (&x != this )
-						//{
-						//	if (x.sz > space)
-						//	{
-						//		pointer n_elem = alloc.allocate(x.sz);
-						//		for (size_type i = 0; i < x.sz; i++)
-						//			alloc.construct(&n_elem[i], x.elem[i]);
-						//		alloc.deallocate(elem, space);
-						//		elem = n_elem;
-						//		space = sz = x.sz;
-						//	}
-						//	else 
-						//	{
-						//		for (size_type i = 0; i < x.sz; i++)
-						//			elem[i] = x.elem[i];
-						//		sz = x.sz;
-						//	}
-						//	alloc = x.alloc;
-						//}
-						return *this;
+					if (&x != this)
+						assign(x.begin(), x.end());
+					//if (&x != this )
+					//{
+					//	if (x.sz > space)
+					//	{
+					//		pointer n_elem = alloc.allocate(x.sz);
+					//		for (size_type i = 0; i < x.sz; i++)
+					//			alloc.construct(&n_elem[i], x.elem[i]);
+					//		alloc.deallocate(elem, space);
+					//		elem = n_elem;
+					//		space = sz = x.sz;
+					//	}
+					//	else 
+					//	{
+					//		for (size_type i = 0; i < x.sz; i++)
+					//			elem[i] = x.elem[i];
+					//		sz = x.sz;
+					//	}
+					//	alloc = x.alloc;
+					//}
+					return *this;
 				}
 
 
@@ -233,6 +233,13 @@ namespace ft {
 						for (size_type to_pop = size() - n; to_pop > 0; to_pop--)
 							pop_back();
 					}
+					else if (n > space)
+					{
+						reserve (_find_new_cap(n));
+						for (size_type i = sz; i < n; i++)
+							alloc.construct(&elem[i], val);
+						sz = n;
+					}
 					else if (n > size())
 					{
 						for (size_type to_add = n - size(); to_add > 0; to_add--)
@@ -284,7 +291,8 @@ namespace ft {
 				{
 					size_type	dist = std::distance(begin(), position);
 
-					reserve(sz + 1);
+
+					reserve(_find_new_cap(1));
 
 					for (size_type st = sz; st > dist; st--)
 					{
@@ -298,9 +306,26 @@ namespace ft {
 
 				void insert( iterator pos, size_type count, const T& value )
 				{
-					iterator new_pos = pos;
-					for (size_type st = 0; st < count; st++)
-						new_pos = insert(new_pos,value);
+					if (count == 0)
+						return;
+					size_type dist_pos = std::distance(begin(), pos);
+					size_type old_sz = sz;
+					reserve(_find_new_cap(count));
+
+					sz += count;
+					for (size_type elempos = sz - 1; elempos >= dist_pos + count; elempos--)
+					{
+						if (elempos < old_sz)
+							alloc.destroy(&elem[elempos]);
+						alloc.construct(&elem[elempos], elem[elempos - count]);
+					}
+
+					for (size_type itpos = 0; itpos < count; itpos++)
+					{
+						if (dist_pos + itpos < old_sz)
+							alloc.destroy(&elem[dist_pos + itpos]);
+						alloc.construct(&elem[dist_pos + itpos], value);
+					}
 				}
 
 				template <class InputIterator>
@@ -310,15 +335,8 @@ namespace ft {
 						size_type dist_f_l = std::distance(first, last);
 						size_type old_sz = sz;
 						size_type new_space;
-						if (!space)
-							new_space = 1;
-						else
-							new_space = space;
 
-						while (sz + dist_f_l > new_space)
-							new_space *= 2;
-
-						reserve(new_space);
+						reserve(_find_new_cap(dist_f_l));
 
 						sz += dist_f_l;
 						for (size_type elempos = sz - 1; elempos >= dist_pos + dist_f_l; elempos--)
@@ -379,12 +397,10 @@ namespace ft {
 
 				void push_back(const T& x)
 				{
-					if (space == 0)
-						reserve(1);
-					else if (sz==space)
-						reserve(2*space);
-					alloc.construct(&elem[sz], x);
-					++sz;
+					insert(end(), x);
+					//reserve(_find_new_cap(1));
+					//alloc.construct(&elem[sz], x);
+					//++sz;
 				}
 
 				void swap(vector<T, Allocator>& x)
@@ -407,6 +423,14 @@ namespace ft {
 				size_type		sz;
 				size_type		space;
 				allocator_type	alloc;
+
+				size_type    _find_new_cap(size_type n)
+							{
+								if ((size() + n) <= capacity())
+									return (this->capacity());
+								size_type len = size() + std::max(size(), n);
+								return ((len < size() || len > max_size()) ? max_size() : len);
+							}
 		};
 
 	template <class T, class Alloc>
