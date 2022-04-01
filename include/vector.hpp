@@ -72,20 +72,22 @@ namespace ft {
 
 				explicit vector(const allocator_type& alloc_arg = allocator_type()) : elem(NULL), sz(0), space(0), alloc(alloc_arg) 
 			{
+				elem = alloc.allocate(0);
 				//alloc.allocate(elem, 0);
 			}
 
 				explicit vector(size_type n, const value_type& value = value_type(), const allocator_type& allocator_arg = allocator_type()) : elem(NULL), sz(n), space(0), alloc(allocator_arg)
 			{
-				reserve(_find_new_cap(sz));
-
+				reserve(sz);
 				for (size_type i = 0; i < sz; i++)
 					alloc.construct(&elem[i], value);
 			}
 
-				vector(const vector& x) : elem(NULL), sz(x.size()), space(0), alloc(x.alloc) //{ *this = x; }
+				vector(const vector& x) : elem(NULL), sz(x.size()), space(sz), alloc(x.alloc)
 			{
-				*this = x;
+				elem = alloc.allocate(space);
+				for (size_type st = 0; st < space; st++)
+					alloc.construct(&elem[st], x[st]);
 			}
 
 
@@ -113,36 +115,25 @@ namespace ft {
 
 			vector<T, Allocator>& operator=(const vector<T, Allocator>& x)
 			{
-				if (&x != this)
+				if (&x != this )
 				{
-					clear();
-					alloc.deallocate(elem, space);
+					if (x.sz > space)
+					{
+						pointer n_elem = alloc.allocate(x.sz);
+						for (size_type i = 0; i < x.sz; i++)
+							alloc.construct(&n_elem[i], x.elem[i]);
+						alloc.deallocate(elem, space);
+						elem = n_elem;
+						space = sz = x.sz;
+					}
+					else 
+					{
+						for (size_type i = 0; i < x.sz; i++)
+							elem[i] = x.elem[i];
+						sz = x.sz;
+					}
 					alloc = x.alloc;
-					space = x.capacity();
-					sz = x.size();
-					elem = alloc.allocate(space);
-					for (size_type i = 0; i < sz; i++)
-						alloc.construct(&elem[i], x[i]);
 				}
-				//if (&x != this )
-				//{
-				//	if (x.sz > space)
-				//	{
-				//		pointer n_elem = alloc.allocate(x.sz);
-				//		for (size_type i = 0; i < x.sz; i++)
-				//			alloc.construct(&n_elem[i], x.elem[i]);
-				//		alloc.deallocate(elem, space);
-				//		elem = n_elem;
-				//		space = sz = x.sz;
-				//	}
-				//	else 
-				//	{
-				//		for (size_type i = 0; i < x.sz; i++)
-				//			elem[i] = x.elem[i];
-				//		sz = x.sz;
-				//	}
-				//	alloc = x.alloc;
-				//}
 				return *this;
 			}
 
@@ -287,20 +278,46 @@ namespace ft {
 			///////////////
 			//p746;
 
-			void assign( size_type count, const T& value )
-			{
-				clear();
-				reserve(count);
-				insert(begin(),count, value);
+			 template <class InputIterator>
+			  			void assign (InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last) {
+				size_type size = std::distance(first, last);
+				this->clear();
+				if (size > space) {
+					try {this->reserve(size);}
+					catch (std::exception & e) { throw std::length_error("vector::_M_fill_insert"); }
+				}
+				for (size_type i = sz; i < size; i++) {
+					alloc.construct(&elem[i], *first);
+					++first;
+				}
+				sz = size;
 			}
 
-			template <class InputIt>
-				void assign( InputIt first, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type last )
-				{
-					clear();
-					reserve(std::distance(first, last));
-					insert(begin(),first, last);
+			void assign (size_type n, const value_type& val) {
+				this->clear();
+				if (n > space) {
+					try {this->reserve(n);}
+					catch (std::exception & e) { throw std::length_error("vector::_M_fill_insert"); }
 				}
+				for (size_type i = sz; i < n; i++)
+					alloc.construct(&elem[i], val);
+				sz = n;
+			}
+
+	//		void assign( size_type count, const T& value )
+	//		{
+	//			clear();
+	//			reserve(count);
+	//			insert(begin(),count, value);
+	//		}
+
+	//		template <class InputIt>
+	//			void assign( InputIt first, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type last )
+	//			{
+	//				clear();
+	//				reserve(std::distance(first, last));
+	//				insert(begin(),first, last);
+	//			}
 
 			void pop_back( void )
 			{
