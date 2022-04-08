@@ -6,17 +6,11 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/03/14 18:02:34 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/08 17:01:13 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_containers.hpp"
-#include <utility>      // std::pair, std::make_pair
-#include <algorithm>    // std::lexicographical_compare std::equal
-#include <string>       // std::string
-#include <vector>       // std::vector
-#include <iostream>     // std::cout, std::boolalpha
-#include <cctype>       // std::tolower
 
 namespace LIB = ft;
 
@@ -36,6 +30,40 @@ void	print_title(std::string to_print)
 
 bool mypredicate (int i, int j) {
 	return (i==j);
+}
+
+template <class K, class V>
+void print_map_ref(LIB::map<K,V> &vct)
+{
+	typename LIB::map<K,V>::iterator it = vct.begin();
+	int i = 0;
+	std::cout << "PRINT MAP REF" << std::endl;
+	while (it != vct.end())
+	{
+		std::cout << i << "" << std::endl;
+		std::cout << "K: " << it->first << std::endl;
+		std::cout << "V: " << it->second << std::endl;
+		i++;
+		it++;
+	}
+	std::cout << "END PRINT MAP REF" << std::endl;
+}
+
+template <class K, class V>
+void print_map_noref(LIB::map<K,V> vct)
+{
+	typename LIB::map<K,V>::iterator it = vct.begin();
+	int i = 0;
+	std::cout << "PRINT MAP NOREF" << std::endl;
+	while (it != vct.end())
+	{
+		std::cout << i << "" << std::endl;
+		std::cout << "K: " << it->first << std::endl;
+		std::cout << "V: " << it->second << std::endl;
+		i++;
+		it++;
+	}
+	std::cout << "END PRINT MAP NOREF" << std::endl;
 }
 
 void print_vector(LIB::vector<int> vct)
@@ -229,7 +257,67 @@ int main ()
 	vinsertb.push_back(33);
 	vinserta.insert(vinserta.begin() +1, vinsertb.begin(), vinsertb.end());
 	print_vector(vinserta);
+	std::cout << "vinserta assign with insertb begin-end" << std::endl;
+	vinserta.assign(vinsertb.begin(), vinsertb.end());
+	print_vector(vinserta);
 
+
+
+
+	print_title("Map");
+	typedef	int	k;
+	typedef	std::string v;
+	typedef LIB::map<k,v>	map_t;
+	map_t	m;
+	(void)m;
+	LIB::pair<map_t::iterator, bool> p = m.insert(LIB::pair<k,v>(1,"un"));
+	//if (m.begin() != p.first)
+	//	std::cout << "Begin != p.first" << std::endl;
+	//print_map_noref<k,v>(m);
+	//print_map_ref<k,v>(m);
+	//std::cout << (p.first)->first << std::endl;
+	////p = m.insert(LIB::pair<int, std::string>(2,"deux"));
+	////p = m.insert(LIB::pair<int, std::string>(3,"trois"));
+	//std::cout << (p.first)->first << std::endl;
+	//print_map_noref<k,v>(m);
+	//print_map_ref<k,v>(m);
+	//map_t	m2(m.begin(),m.end());
+	//print_map_ref<k,v>(m2);
+	//print_map_noref<k,v>(m2);
+
+
+
+
+	//tree->insert_node(std::make_pair(1,"un"));
+	//tree->insert_node(std::make_pair(4,"quatre"));
+	//tree->insert_node(std::make_pair(12, "douze"));
+	//tree->insert_node(std::make_pair(2, "deux"));
+	//tree->insert_node(std::make_pair(6, "six"));
+	//tree->insert_node(std::make_pair(10, "dix"));
+	//tree->insert_node(std::make_pair(14, "quatorze"));
+	//tree->insert_node(std::make_pair(3, "trois"));
+	//tree->insert_node(std::make_pair(5, "cinq"));
+	//tree->insert_node(std::make_pair(7, "sept"));
+	//tree->insert_node(std::make_pair(9, "neuf"));
+	//tree->insert_node(std::make_pair(11, "onze"));
+	//tree->insert_node(std::make_pair(13, "treize"));
+	//tree->insert_node(std::make_pair(15, "quinze"));
+	//tree->inorder_walk();
+	//std::cout << std::endl;
+	////tree->inorder_walk();
+	//tree->delete_node(std::make_pair(15, "quinze"));
+	//tree->inorder_walk();
+	////tree->inorder_walk();
+	//std::cout << std::endl;
+
+	//rbt<type>::node_pointer ptr = tree->minimum();
+	//for (rbt<type>::iterator it(ptr); it != tree->get_t_null(); it++)
+	//{
+	//	std::cout << "it = " <<  it->first << std::endl;
+	//}
+	//std::cout << std::endl;
+	//std::cout << std::endl;
+	//tree->inorder_walk();
 	return 0;
 
 }

@@ -6,7 +6,7 @@
 #    By: csejault <csejault@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/11 11:59:05 by csejault          #+#    #+#              #
-#    Updated: 2022/02/08 16:21:22 by csejault         ###   ########.fr        #
+#    Updated: 2022/04/08 15:58:30 by csejault         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,9 @@ CPP				=	c++
 #  	header file it encounters. This prevents Make errors if header files are
 #  	renamed/deleted/moved, and it attempts to use the old dependency
 #  	information, as it thinks it can create the missing header.
-DEBUG		=	-g3 -fsanitize=address
+
+#SANITIZE = -fsanitize=address
+DEBUG		=	-g3 $(SANITIZE)
 CPPFLAGS		=	-Wall -Werror -Wextra -std=c++98 -MMD -MP $(DEBUG) $(INCLUDES)
 
 # Tells Make to include all .d files created by compiling object files,and the -

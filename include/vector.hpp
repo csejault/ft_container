@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/01 17:11:44 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/01 17:18:18 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/06 10:37:33 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,6 @@ namespace ft {
 
 				template <class InputIterator>
 					void assign (InputIterator first, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type last) {
-						size_type size = std::distance(first, last);
 						clear();
 						if (elem)
 							alloc.deallocate(elem,space);

@@ -7,7 +7,8 @@ if [[ $# -eq 0 ]]
 then
 	clear
 	cat $MAIN_FT > $MAIN_MAKEFILE
-	make re && ./ft_containers
+	#make re && valgrind --leak-check=full ./ft_containers
+	make re && valgrind --leak-check=full --show-leak-kinds=all ./ft_containers
 	exit
 else
 
