@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:38:59 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/08 16:55:19 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/11 17:07:50 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ namespace ft
 						 };
 
 					 private:
-						 //typedef rbt<value_type,typename allocator_type::template rebind< typename rbt < value_type > ::node_type >::other, value_compare>	tree_type;
-						 typedef rbt<value_type, allocator_type, value_compare>	tree_type;
+						 typedef rbt<value_type,typename allocator_type::template rebind< typename rbt < value_type > ::node_type >::other, value_compare>	tree_type;
+						 typedef typename allocator_type::template rebind<typename map<key_type, mapped_type,key_compare, allocator_type>::tree_type>::other allocator_type_tree;
 						 //typedef rbt<value_type>	tree_type;
 
 					 public:
@@ -86,16 +86,18 @@ namespace ft
 						 key_compare						_compare;
 						 allocator_type						_alloc;
 						 tree_type*							_tree;
-					typename allocator_type::template rebind<typename map<key_type, mapped_type,key_compare, allocator_type>::tree_type>::other _tree_allocator;
+						 allocator_type_tree				_tree_allocator;
 
 						 void _alloc_tree(tree_type new_tree)
 						 {
+							 (void)new_tree;
 							 _tree = _tree_allocator.allocate(1);
 							 _tree_allocator.construct(_tree, new_tree);
 						 }
 
 						 void _deallocate_tree( void )
 						 {
+							 _tree_allocator.destroy(_tree);
 							 _tree_allocator.deallocate(_tree, 1);
 							 _tree = NULL;
 						 }
@@ -109,13 +111,13 @@ namespace ft
 						 //             //
 						 /////////////////
 
-						 explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc_arg = allocator_type()) : _compare(comp), _alloc(alloc_arg)
+						 explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc_arg = allocator_type()) : _compare(comp), _alloc(alloc_arg), _tree(NULL)
 					 {
-							 _alloc_tree(tree_type());
+						 _alloc_tree(tree_type());
 					 }
 
 						 template <class InputIterator>
-							 map (InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last, const key_compare& comp = key_compare(), const allocator_type& alloc_arg = allocator_type()) : _compare(comp), _alloc(alloc_arg)
+							 map (InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last, const key_compare& comp = key_compare(), const allocator_type& alloc_arg = allocator_type()) : _compare(comp), _alloc(alloc_arg), _tree(NULL)
 						 {
 							 _alloc_tree(tree_type());
 							 while(first != last)
@@ -126,15 +128,15 @@ namespace ft
 						 }
 
 						 map(const map& x) : _alloc(x._alloc),  _tree(NULL)
-						 {
-							 _alloc_tree(tree_type());
-							 *this = x;
-						 }
+					 {
+						 _alloc_tree(tree_type());
+						 *this = x;
+					 }
 
 						 ~map( void )
 						 {
-								 if (_tree)
-								 	_deallocate_tree();
+							 if (_tree)
+								 _deallocate_tree();
 						 }
 
 
@@ -149,7 +151,7 @@ namespace ft
 							 if (this != &x)
 							 {
 								 if (_tree)
-								 	_deallocate_tree();
+									 _deallocate_tree();
 								 _compare = x._compare;
 								 _alloc = x._alloc;
 								 _alloc_tree(*x._tree);

@@ -8,7 +8,7 @@ then
 	clear
 	cat $MAIN_FT > $MAIN_MAKEFILE
 	#make re && valgrind --leak-check=full ./ft_containers
-	make re && valgrind --leak-check=full --show-leak-kinds=all ./ft_containers
+	make re && valgrind -s --leak-check=full --show-leak-kinds=all ./ft_containers
 	exit
 else
 
@@ -18,10 +18,9 @@ else
 
 	sed s/"LIB_NAME = ft"/"LIB_NAME = std"/g $MAIN_FT > $MAIN_MAKEFILE
 	sed s/"namespace LIB = ft"/"namespace LIB = std"/g -i $MAIN_MAKEFILE
-	make re
-	./ft_containers >.std_result.txt
+	make re && ./ft_containers >.std_result.txt
 	make fclean
 
-	diff .ft_result.txt .std_result.txt && echo "DIFF OK"
+	vimdiff .ft_result.txt .std_result.txt && echo "DIFF OK"
 	rm $MAIN_MAKEFILE
 fi

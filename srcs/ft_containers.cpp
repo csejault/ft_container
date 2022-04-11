@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/08 17:01:13 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/11 17:10:58 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,21 +269,22 @@ int main ()
 	typedef	std::string v;
 	typedef LIB::map<k,v>	map_t;
 	map_t	m;
-	(void)m;
 	LIB::pair<map_t::iterator, bool> p = m.insert(LIB::pair<k,v>(1,"un"));
-	//if (m.begin() != p.first)
-	//	std::cout << "Begin != p.first" << std::endl;
-	//print_map_noref<k,v>(m);
-	//print_map_ref<k,v>(m);
-	//std::cout << (p.first)->first << std::endl;
-	////p = m.insert(LIB::pair<int, std::string>(2,"deux"));
-	////p = m.insert(LIB::pair<int, std::string>(3,"trois"));
-	//std::cout << (p.first)->first << std::endl;
-	//print_map_noref<k,v>(m);
-	//print_map_ref<k,v>(m);
-	//map_t	m2(m.begin(),m.end());
-	//print_map_ref<k,v>(m2);
-	//print_map_noref<k,v>(m2);
+
+p = m.insert(LIB::pair<int, std::string>(2,"deux"));
+	if (m.begin() != p.first)
+		std::cout << "Begin != p.first" << std::endl;
+	print_map_noref<k,v>(m);
+	print_map_ref<k,v>(m);
+	std::cout << (p.first)->first << std::endl;
+	p = m.insert(LIB::pair<int, std::string>(2,"deux"));
+	p = m.insert(LIB::pair<int, std::string>(3,"trois"));
+	std::cout << (p.first)->first << std::endl;
+	print_map_noref<k,v>(m);
+	print_map_ref<k,v>(m);
+	map_t	m2(m.begin(),m.end());
+	print_map_ref<k,v>(m2);
+	print_map_noref<k,v>(m2);
 
 
 
