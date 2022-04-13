@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/11 17:10:58 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/13 18:49:55 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,14 @@ void print_map_ref(LIB::map<K,V> &vct)
 	std::cout << "PRINT MAP REF" << std::endl;
 	while (it != vct.end())
 	{
-		std::cout << i << "" << std::endl;
-		std::cout << "K: " << it->first << std::endl;
-		std::cout << "V: " << it->second << std::endl;
+		std::cout << "[" << i << "]";
+		std::cout << it->first;
+		std::cout << "(" << it->second << ") - ";
 		i++;
 		it++;
 	}
 	std::cout << "END PRINT MAP REF" << std::endl;
+	std::cout << std::endl;
 }
 
 template <class K, class V>
@@ -57,13 +58,31 @@ void print_map_noref(LIB::map<K,V> vct)
 	std::cout << "PRINT MAP NOREF" << std::endl;
 	while (it != vct.end())
 	{
-		std::cout << i << "" << std::endl;
-		std::cout << "K: " << it->first << std::endl;
-		std::cout << "V: " << it->second << std::endl;
+		std::cout << "[" << i << "]";
+		std::cout << it->first;
+		std::cout << "(" << it->second << ") - ";
 		i++;
 		it++;
 	}
 	std::cout << "END PRINT MAP NOREF" << std::endl;
+	std::cout << std::endl;
+}
+
+
+template <class k, class v>
+	void check_map_insert_val(LIB::map<k,v>& MapToInsert, LIB::pair<k,v> p)
+{
+	LIB::pair<typename LIB::map<k,v>::iterator, bool> check = MapToInsert.insert(p);
+	std::cout << "Insert : " << p.first << std::endl;
+	if (MapToInsert.begin() != check.first)
+		std::cout << "Begin != check.first" << std::endl;
+	std::cout << (check.first)->first << std::endl;
+	if (check.second)
+		std::cout << "insert true" << std::endl;
+	else
+		std::cout << "insert false" << std::endl;
+	print_map_noref<k,v>(MapToInsert);
+	print_map_ref<k,v>(MapToInsert);
 }
 
 void print_vector(LIB::vector<int> vct)
@@ -262,26 +281,24 @@ int main ()
 	print_vector(vinserta);
 
 
-
-
 	print_title("Map");
 	typedef	int	k;
 	typedef	std::string v;
 	typedef LIB::map<k,v>	map_t;
 	map_t	m;
-	LIB::pair<map_t::iterator, bool> p = m.insert(LIB::pair<k,v>(1,"un"));
+	check_map_insert_val(m, LIB::pair<k,v>(3,"trois"));
+	check_map_insert_val(m, LIB::pair<k,v>(0,"zero"));
+	check_map_insert_val(m, LIB::pair<k,v>(1,"un"));
 
-p = m.insert(LIB::pair<int, std::string>(2,"deux"));
-	if (m.begin() != p.first)
-		std::cout << "Begin != p.first" << std::endl;
-	print_map_noref<k,v>(m);
-	print_map_ref<k,v>(m);
-	std::cout << (p.first)->first << std::endl;
-	p = m.insert(LIB::pair<int, std::string>(2,"deux"));
-	p = m.insert(LIB::pair<int, std::string>(3,"trois"));
-	std::cout << (p.first)->first << std::endl;
-	print_map_noref<k,v>(m);
-	print_map_ref<k,v>(m);
+	std::cout << "size = " << m.size() << std::endl;
+	check_map_insert_val(m, LIB::pair<k,v>(2,"deux"));
+	check_map_insert_val(m, LIB::pair<k,v>(-1,"moins un"));
+
+	std::cout << "Map insert double value - 3" << std::endl;
+	check_map_insert_val(m, LIB::pair<k,v>(3,"deuxieme trois"));
+	std::cout << "Map insert double value - 0" << std::endl;
+	check_map_insert_val(m, LIB::pair<k,v>(0,"deuxieme zero"));
+
 	map_t	m2(m.begin(),m.end());
 	print_map_ref<k,v>(m2);
 	print_map_noref<k,v>(m2);

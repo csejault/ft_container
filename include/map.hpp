@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:38:59 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/11 17:07:50 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/13 18:54:42 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ namespace ft
 						 typedef Key											key_type;
 						 typedef T												mapped_type;
 						 typedef ft::pair<const key_type, mapped_type>			value_type;
+						 //typedef ft::pair<const key_type, mapped_type>			value_type;
 						 typedef Compare										key_compare;
 						 typedef Alloc											allocator_type;
 						 typedef typename allocator_type::reference				reference;
@@ -47,26 +48,28 @@ namespace ft
 						 typedef size_t											size_type;
 
 						 //https://www.cplusplus.com/reference/map/map/value_comp/
-						 //class map<key_type,value_type,key_compare,allocator_type>::value_compare
-						 class value_compare
-						 {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
-							 friend class map<key_type, value_type, key_compare, allocator_type>;
-							 protected:
+						 class value_compare : public std::binary_function<value_type, value_type, bool>
+					 {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
+						 private:
+							 friend class map;
+						 protected:
 							 key_compare comp;
 							 value_compare (key_compare c) : comp(c) {}  // constructed with map's comparison object
-							 public:
+						 public:
 							 typedef bool result_type;
 							 typedef value_type first_argument_type;
 							 typedef value_type second_argument_type;
-							 bool operator() (const value_type& x, const value_type& y) const
+							 result_type	operator() (const first_argument_type& x, const second_argument_type& y) const
 							 {
 								 return comp(x.first, y.first);
 							 }
-						 };
+					 };
 
 					 private:
-						 typedef rbt<value_type,typename allocator_type::template rebind< typename rbt < value_type > ::node_type >::other, value_compare>	tree_type;
+						 typedef rbt<value_type,typename allocator_type::template rebind< typename rbt < value_type, allocator_type, value_compare > ::node_type >::other, value_compare>	tree_type;
 						 typedef typename allocator_type::template rebind<typename map<key_type, mapped_type,key_compare, allocator_type>::tree_type>::other allocator_type_tree;
+						 typedef	typename tree_type::node_type				node_type;
+						 typedef	typename tree_type::node_pointer				node_pointer;
 						 //typedef rbt<value_type>	tree_type;
 
 					 public:
@@ -83,16 +86,19 @@ namespace ft
 						 /////////////
 
 					 private:
-						 key_compare						_compare;
+						 key_compare						_key_compare;
+						 value_compare						_value_compare;
 						 allocator_type						_alloc;
-						 tree_type*							_tree;
 						 allocator_type_tree				_tree_allocator;
+						 node_pointer						_t_null;
+						 tree_type*							_tree;
 
-						 void _alloc_tree(tree_type new_tree)
+						 tree_type*& _alloc_tree(tree_type new_tree)
 						 {
-							 (void)new_tree;
 							 _tree = _tree_allocator.allocate(1);
 							 _tree_allocator.construct(_tree, new_tree);
+							 _t_null = _tree->get_t_null();
+							 return ( _tree );
 						 }
 
 						 void _deallocate_tree( void )
@@ -100,6 +106,15 @@ namespace ft
 							 _tree_allocator.destroy(_tree);
 							 _tree_allocator.deallocate(_tree, 1);
 							 _tree = NULL;
+							 _t_null = NULL;
+						 }
+
+						 typename value_compare::result_type	is_equal(const typename value_compare::first_argument_type& x , const typename value_compare::second_argument_type& y) const 
+						 {
+							 if (_value_compare(x, y) || _value_compare(y, x))
+								 return (false);
+							 else
+								 return (true);
 						 }
 
 					 public:
@@ -111,27 +126,16 @@ namespace ft
 						 //             //
 						 /////////////////
 
-						 explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc_arg = allocator_type()) : _compare(comp), _alloc(alloc_arg), _tree(NULL)
-					 {
-						 _alloc_tree(tree_type());
-					 }
+						 explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc_arg = allocator_type()) : _key_compare(comp), _value_compare(comp), _alloc(alloc_arg), _tree_allocator(allocator_type_tree()),  _t_null(NULL), _tree(_alloc_tree(tree_type(_tree_allocator,_value_compare))) { }
 
 						 template <class InputIterator>
-							 map (InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last, const key_compare& comp = key_compare(), const allocator_type& alloc_arg = allocator_type()) : _compare(comp), _alloc(alloc_arg), _tree(NULL)
+							 map (InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last, const key_compare& comp = key_compare(), const allocator_type& alloc_arg = allocator_type()) : _key_compare(comp), _value_compare(comp), _alloc(alloc_arg), _tree_allocator(allocator_type_tree()), _t_null(NULL), _tree(_alloc_tree(tree_type(_tree_allocator,_value_compare)))
 						 {
-							 _alloc_tree(tree_type());
-							 while(first != last)
-							 {
+							 for(;first != last; first++)
 								 _tree->insert_node(*first);
-								 first++;
-							 }
 						 }
 
-						 map(const map& x) : _alloc(x._alloc),  _tree(NULL)
-					 {
-						 _alloc_tree(tree_type());
-						 *this = x;
-					 }
+						 map(const map& x) : _key_compare(x._key_compare), _value_compare(x._key_compare), _alloc(x._alloc), _tree_allocator(x._tree_allocator),  _t_null(NULL), _tree(_alloc_tree(*x._tree)) { }
 
 						 ~map( void )
 						 {
@@ -152,8 +156,10 @@ namespace ft
 							 {
 								 if (_tree)
 									 _deallocate_tree();
-								 _compare = x._compare;
+								 _key_compare = x._key_compare;
+								 _value_compare = x._value_compare;
 								 _alloc = x._alloc;
+								 _tree_allocator = x._tree_allocator;
 								 _alloc_tree(*x._tree);
 							 }
 							 return (*this);
@@ -240,10 +246,14 @@ namespace ft
 						 //           //
 						 ///////////////
 
+
 						 ft::pair<iterator,bool> insert (const value_type& val)
 						 {
-							 iterator it = iterator(_tree->insert_node(val));
-							 return (ft::make_pair<iterator, bool>(it, true));
+							 node_pointer& to_find = _tree->search(val);
+							 if (to_find == _t_null)
+								 return (ft::make_pair<iterator, bool>(iterator(_tree->insert_node(val)), true));
+							 else
+								 return (ft::make_pair<iterator, bool>(iterator(to_find), false));
 						 }
 
 						 iterator insert (iterator position, const value_type& val)
