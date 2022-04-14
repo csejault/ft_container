@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:38:59 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/13 18:54:42 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/14 12:35:43 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,7 @@ namespace ft
 						 template <class InputIterator>
 							 map (InputIterator first, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type last, const key_compare& comp = key_compare(), const allocator_type& alloc_arg = allocator_type()) : _key_compare(comp), _value_compare(comp), _alloc(alloc_arg), _tree_allocator(allocator_type_tree()), _t_null(NULL), _tree(_alloc_tree(tree_type(_tree_allocator,_value_compare)))
 						 {
-							 for(;first != last; first++)
-								 _tree->insert_node(*first);
+							 insert(first,last);
 						 }
 
 						 map(const map& x) : _key_compare(x._key_compare), _value_compare(x._key_compare), _alloc(x._alloc), _tree_allocator(x._tree_allocator),  _t_null(NULL), _tree(_alloc_tree(*x._tree)) { }
@@ -258,15 +257,15 @@ namespace ft
 
 						 iterator insert (iterator position, const value_type& val)
 						 {
-							 (void)val;
 							 (void)position;
+							 return(insert(val).first);
 						 }
 
 						 template <class InputIterator>
 							 void insert (InputIterator first, InputIterator last)
 							 {
-								 (void)first;
-								 (void)last;
+								 for (;first != last; first++)
+									 insert(*first);
 							 }
 
 						 void erase (iterator position)
@@ -292,6 +291,7 @@ namespace ft
 
 						 void clear()
 						 {
+							 _tree->delete_tree(_tree->get_root());
 						 }
 
 

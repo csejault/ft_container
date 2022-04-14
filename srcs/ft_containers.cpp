@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/13 18:49:55 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/14 12:42:33 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void print_map_ref(LIB::map<K,V> &vct)
 	typename LIB::map<K,V>::iterator it = vct.begin();
 	int i = 0;
 	std::cout << "PRINT MAP REF" << std::endl;
+	std::cout << "Size = " << vct.size() << std::endl;
 	while (it != vct.end())
 	{
 		std::cout << "[" << i << "]";
@@ -56,6 +57,7 @@ void print_map_noref(LIB::map<K,V> vct)
 	typename LIB::map<K,V>::iterator it = vct.begin();
 	int i = 0;
 	std::cout << "PRINT MAP NOREF" << std::endl;
+	std::cout << "Size = " << vct.size() << std::endl;
 	while (it != vct.end())
 	{
 		std::cout << "[" << i << "]";
@@ -298,6 +300,11 @@ int main ()
 	check_map_insert_val(m, LIB::pair<k,v>(3,"deuxieme trois"));
 	std::cout << "Map insert double value - 0" << std::endl;
 	check_map_insert_val(m, LIB::pair<k,v>(0,"deuxieme zero"));
+
+	std::cout << "Map clear - check print and size" << std::endl;
+	m.clear();
+	print_map_ref<k,v>(m);
+	print_map_noref<k,v>(m);
 
 	map_t	m2(m.begin(),m.end());
 	print_map_ref<k,v>(m2);
