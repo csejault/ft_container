@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:38:59 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/14 12:35:43 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/15 16:22:51 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,11 @@ namespace ft
 
 						 mapped_type& operator[] (const key_type& k)
 						 {
-							 (void)k;
+							 iterator it = find(k);
+							 if (it == end())
+								 return ((*_tree->insert_node(ft::make_pair(k, mapped_type())))->second);
+							 else
+								 return (it->second);
 						 }
 
 
@@ -318,47 +322,60 @@ namespace ft
 
 						 iterator find (const key_type& k)
 						 {
-							 (void)k;
+							 value_type p_to_find = ft::make_pair(k, mapped_type());
+							 node_pointer to_find = _tree->search(p_to_find);
+							 if (to_find == _t_null)
+								 return (end());
+							 else
+								 return (iterator(to_find));
 						 }
 
 						 const_iterator find (const key_type& k) const
 						 {
-							 (void)k;
+							 value_type p_to_find = ft::make_pair(k, mapped_type());
+							 node_pointer to_find = _tree->search(p_to_find);
+							 if (to_find == _t_null)
+								 return (end());
+							 else
+								 return (const_iterator(to_find));
 						 }
 
 						 size_type count (const key_type& k) const
 						 {
-							 (void)k;
+							 if (find(k) != end())
+								 return (1);
+							 else
+								 return (0);
 						 }
 
 						 iterator lower_bound (const key_type& k)
 						 {
-							 (void)k;
+							 return(_tree->lower_bound(ft::make_pair(k, mapped_type())));
 						 }
 
 						 const_iterator lower_bound (const key_type& k) const
 						 {
-							 (void)k;
+							 return(_tree->lower_bound(ft::make_pair(k, mapped_type())));
 						 }
 
 						 iterator upper_bound (const key_type& k)
 						 {
-							 (void)k;
+							 return(_tree->upper_bound(ft::make_pair(k, mapped_type())));
 						 }
 
 						 const_iterator upper_bound (const key_type& k) const
 						 {
-							 (void)k;
+							 return(_tree->upper_bound(ft::make_pair(k, mapped_type())));
 						 }
 
 						 ft::pair<const_iterator,const_iterator> equal_range (const key_type& k) const
 						 {
-							 (void)k;
+						     return(_tree->equal_range(ft::make_pair(k, mapped_type())));
 						 }
 
 						 ft::pair<iterator,iterator>             equal_range (const key_type& k)
 						 {
-							 (void)k;
+						     return(_tree->equal_range(ft::make_pair(k, mapped_type())));
 						 }
 
 

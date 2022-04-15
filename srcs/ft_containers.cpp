@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/14 12:42:33 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/15 17:24:01 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,6 +288,7 @@ int main ()
 	typedef	std::string v;
 	typedef LIB::map<k,v>	map_t;
 	map_t	m;
+	m.clear();
 	check_map_insert_val(m, LIB::pair<k,v>(3,"trois"));
 	check_map_insert_val(m, LIB::pair<k,v>(0,"zero"));
 	check_map_insert_val(m, LIB::pair<k,v>(1,"un"));
@@ -301,14 +302,63 @@ int main ()
 	std::cout << "Map insert double value - 0" << std::endl;
 	check_map_insert_val(m, LIB::pair<k,v>(0,"deuxieme zero"));
 
+	map_t	m2(m.begin(),m.end());
+	print_map_ref<k,v>(m2);
+	print_map_noref<k,v>(m2);
+
 	std::cout << "Map clear - check print and size" << std::endl;
 	m.clear();
 	print_map_ref<k,v>(m);
 	print_map_noref<k,v>(m);
+	m.clear();
+	print_map_ref<k,v>(m);
+	print_map_noref<k,v>(m);
+	m = m2;
+	print_map_ref<k,v>(m);
+	print_map_noref<k,v>(m);
+	m.clear();
+	print_map_ref<k,v>(m);
+	print_map_noref<k,v>(m);
+	m = m2;
+	print_map_ref<k,v>(m);
+	print_map_noref<k,v>(m);
 
-	map_t	m2(m.begin(),m.end());
-	print_map_ref<k,v>(m2);
-	print_map_noref<k,v>(m2);
+	map_t	m3(m.begin(),m.end());
+	print_map_ref<k,v>(m3);
+	print_map_noref<k,v>(m3);
+
+	
+	std::cout << "k 3 value " << m[3] << std::endl;
+	std::cout << "find [3] - " << m.find(3)->second << std::endl;
+	std::cout << "modif [3]" << std::endl;
+	m[3] = "trois []";
+	std::cout << m[3] << std::endl;
+	print_map_ref<k,v>(m);
+	print_map_noref<k,v>(m);
+	std::cout << m[99] << std::endl;
+	m[99] = "99 []";
+	std::cout << m[99] << std::endl;
+	std::cout << "count = " << m.count(99) << std::endl;
+	std::cout << "count = " << m.count(98) << std::endl;
+	std::cout << "count = " << m.count(3) << std::endl;
+	std::cout << "lower bound key 0 = " << (m.lower_bound(0))->second << std::endl;
+	std::cout << "upper bound key 0 = " << (m.upper_bound(0))->second << std::endl;
+	std::cout << "lower bound key 2 = " << (m.lower_bound(2))->second << std::endl;
+	std::cout << "upper bound key 2 = " << (m.upper_bound(2))->second << std::endl;
+	std::cout << "lower bound key 90 = " << (m.lower_bound(90))->second << std::endl;
+	std::cout << "upper bound key 90 = " << (m.upper_bound(90))->second << std::endl;
+	std::cout << "lower bound key -100= " << (m.lower_bound(-100))->second << std::endl;
+	std::cout << "upper bound key -100 = " << (m.upper_bound(-100))->second << std::endl;
+	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(-2); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
+	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(-1); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
+	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(0); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
+	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(1); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
+	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(2); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
+	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(3); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
+	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(4); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
+	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(5); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
+	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(6); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
+	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(7); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
 
 
 
