@@ -6,18 +6,20 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:38:59 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/15 16:22:51 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/20 15:42:41 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MAP_HPP
 # define MAP_HPP
 //# include ".rbt/rbt.hpp"
 #include <functional> 
 #include "type_traits.hpp"
+#include "utils.hpp"
 #include "utility.hpp"
 #include "iterator.hpp"
-#include "rbt/rbt.hpp"
+#include "rbt.hpp"
 
 namespace ft
 {
@@ -182,22 +184,22 @@ namespace ft
 
 						 iterator begin()
 						 {
-							 return (iterator(_tree->minimum()));
+							 return(iterator(_tree->minimum(), _tree->get_t_null(), _tree->get_root()));
 						 }
 
 						 const_iterator begin() const
 						 {
-							 return (const_iterator(_tree->minimum()));
+							 return(const_iterator(_tree->minimum(), _tree->get_t_null(), _tree->get_root()));
 						 }
 
 						 iterator end()
 						 {
-							 return(iterator(_tree->get_t_null()));
+							 return(iterator(_tree->get_t_null(), _tree->get_t_null(), _tree->get_root()));
 						 }
 
 						 const_iterator end() const
 						 {
-							 return(const_iterator(_tree->get_t_null()));
+							 return(const_iterator(_tree->get_t_null(), _tree->get_t_null(), _tree->get_root()));
 						 }
 
 						 reverse_iterator rbegin()
@@ -254,9 +256,9 @@ namespace ft
 						 {
 							 node_pointer& to_find = _tree->search(val);
 							 if (to_find == _t_null)
-								 return (ft::make_pair<iterator, bool>(iterator(_tree->insert_node(val)), true));
+								 return (ft::make_pair<iterator, bool>(iterator(_tree->insert_node(val), _tree->get_t_null(), _tree->get_root()), true));
 							 else
-								 return (ft::make_pair<iterator, bool>(iterator(to_find), false));
+								 return (ft::make_pair<iterator, bool>(iterator(to_find, _tree->get_t_null(), _tree->get_root()), false));
 						 }
 
 						 iterator insert (iterator position, const value_type& val)
@@ -274,23 +276,36 @@ namespace ft
 
 						 void erase (iterator position)
 						 {
-							 (void)position;
+							 _tree->delete_node(*position);
 						 }
 
 						 size_type erase (const key_type& k)
 						 {
-							 (void)k;
+							 iterator to_del = find(k);
+							 if (to_del == end())
+								 return (0);
+							 else
+								 erase(to_del);
+							 return(1);
 						 }
 
 						 void erase (iterator first, iterator last)
 						 {
-							 (void)first;
-							 (void)last;
+							 while (first != last)
+							 {
+								 erase(first);
+								 first++;
+							 }
 						 }
 
 						 void swap (map& x)
 						 {
-							 (void)x;
+							 ft::swap(_key_compare, x._key_compare);
+							 ft::swap(_value_compare, x._value_compare);
+							 ft::swap(_alloc, x._alloc);
+							 ft::swap(_tree_allocator, x._tree_allocator);
+							 ft::swap(_t_null, x._t_null);
+							 ft::swap(_tree, x._tree);
 						 }
 
 						 void clear()
@@ -307,10 +322,12 @@ namespace ft
 
 						 key_compare key_comp() const
 						 {
+							 return (_key_compare);
 						 }
 
 						 value_compare value_comp() const
 						 {
+							 return(_value_compare);
 						 }
 
 
@@ -324,20 +341,14 @@ namespace ft
 						 {
 							 value_type p_to_find = ft::make_pair(k, mapped_type());
 							 node_pointer to_find = _tree->search(p_to_find);
-							 if (to_find == _t_null)
-								 return (end());
-							 else
-								 return (iterator(to_find));
+							 return (iterator(to_find, _tree->get_t_null(), _tree->get_root()));
 						 }
 
 						 const_iterator find (const key_type& k) const
 						 {
 							 value_type p_to_find = ft::make_pair(k, mapped_type());
 							 node_pointer to_find = _tree->search(p_to_find);
-							 if (to_find == _t_null)
-								 return (end());
-							 else
-								 return (const_iterator(to_find));
+							 return (const_iterator(to_find, _tree->get_t_null(), _tree->get_root()));
 						 }
 
 						 size_type count (const key_type& k) const
@@ -370,12 +381,12 @@ namespace ft
 
 						 ft::pair<const_iterator,const_iterator> equal_range (const key_type& k) const
 						 {
-						     return(_tree->equal_range(ft::make_pair(k, mapped_type())));
+							 return(_tree->equal_range(ft::make_pair(k, mapped_type())));
 						 }
 
 						 ft::pair<iterator,iterator>             equal_range (const key_type& k)
 						 {
-						     return(_tree->equal_range(ft::make_pair(k, mapped_type())));
+							 return(_tree->equal_range(ft::make_pair(k, mapped_type())));
 						 }
 
 
@@ -387,11 +398,19 @@ namespace ft
 
 						 allocator_type get_allocator() const
 						 {
+							 return (_alloc);
 						 }
 
 
 
 				 };
+	template< class Key, class T, class Compare, class Alloc >
+
+		void swap( ft::map<Key,T,Compare,Alloc>& lhs,
+				ft::map<Key,T,Compare,Alloc>& rhs )
+		{
+			lhs.swap(rhs);
+		}
 
 }
 #endif

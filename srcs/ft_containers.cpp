@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/15 17:24:01 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/19 06:35:48 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -359,6 +359,8 @@ int main ()
 	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(5); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
 	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(6); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
 	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(7); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
+	map_t::const_iterator cit;
+	cit = m.end();
 
 
 

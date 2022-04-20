@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 12:22:05 by csejault          #+#    #+#             */
-/*   Updated: 2022/03/16 18:27:30 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/19 09:44:33 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef ITERATOR_HPP
@@ -72,7 +72,8 @@ namespace ft {
 				typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
 				typedef typename ft::iterator_traits<Iterator>::reference			reference;
 
-				reverse_iterator( void ) : _ptr(NULL) { }
+				//reverse_iterator( void ) : _ptr(NULL) { }
+				reverse_iterator( void ) : _ptr() { }
 				explicit reverse_iterator( iterator_type x ) : _ptr(x) { }
 				template< class U >
 					reverse_iterator( const reverse_iterator<U>& other ) : _ptr(other.base()) { }
@@ -84,7 +85,7 @@ namespace ft {
 				iterator_type 		base() const { return (iterator_type( _ptr )); }
 
 
-				reference			operator*( void ) const { return *(_ptr - 1); }
+				reference			operator*( void ) const { iterator_type tmp = _ptr; return *(--tmp); }
 				pointer				operator->( void ) const { return &(operator*()); }
 
 				reverse_iterator &	operator++( void ) { --_ptr; return *this; }
