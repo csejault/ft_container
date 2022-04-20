@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 15:28:04 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/07 16:51:25 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/20 17:56:47 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef UTILITY_HPP
@@ -49,7 +49,7 @@ namespace ft {
 		}
 
 	template <class T1, class T2>
-		bool operator < (const pair<T1, T2>& x, pair<T1, T2>& y)
+		bool operator < (const pair<T1, T2>& x, const pair<T1, T2>& y)
 		{
 			if (x.first < y.first || (!(y.first < x.first) && x.second < y.second))
 				return (true);
