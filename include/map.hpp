@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:38:59 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/25 19:13:06 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/25 19:21:13 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -423,14 +423,7 @@ namespace ft
 
 			if (lhs.size() != rhs.size())
 				return (false);
-			while (first != last)
-			{
-				if (first != cursor)
-					return (false);
-				cursor++;
-				first++;
-			}
-			return (true);
+			return (ft::equal(lhs.begin(),lhs.end(),rhs.begin()));
 		}
 
 	template< class Key, class T, class Compare, class Alloc >

@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 12:22:05 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/19 09:44:33 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/25 20:08:48 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef ITERATOR_HPP
@@ -16,13 +16,11 @@
 //https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
 namespace ft {
 
-	struct random_access_iterator_tag {};
 
-	//struct input_iterator_tag {};
-	//struct output_iterator_tag {};
-	//struct forward_iterator_tag : public input_iterator_tag {};
-	//struct bidirectional_iterator_tag : public forward_iterator_tag {};
-	//struct random_access_iterator_tag : public bidirectional_iterator_tag {};
+	struct input_iterator_tag {};
+	struct forward_iterator_tag : public input_iterator_tag {};
+	struct bidirectional_iterator_tag : public forward_iterator_tag {};
+	struct random_access_iterator_tag : public bidirectional_iterator_tag {};
 
 
 	template <class Iterator>
