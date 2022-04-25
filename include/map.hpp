@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/04 14:38:59 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/20 17:43:26 by csejault         ###   ########.fr       */
+/*   Updated: 2022/04/25 19:13:06 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,10 +292,11 @@ namespace ft
 
 						 void erase (iterator first, iterator last)
 						 {
+							 iterator tmp;
 							 while (first != last)
 							 {
-								 erase(first);
-								 first++;
+								 tmp = first++;
+								 erase(tmp);
 							 }
 						 }
 
