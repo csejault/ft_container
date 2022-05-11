@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_containers.cpp                                  :+:      :+:    :+:   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/05/11 13:56:41 by csejault         ###   ########.fr       */
+/*   Updated: 2022/05/11 19:11:21 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 #include <list>
 # if !defined(LIB)
 #  define LIB ft
-# else
-#  define LIB std
 # endif /* !defined(STD) */
 
 
@@ -26,7 +24,7 @@ void	print_title(std::string to_print)
 	while ( ++i < 10)
 		std::cout << "#";
 	std::cout << std::endl;
-	std::cout << "LIB_NAME = ft - " <<  to_print << " - CHECK" << std::endl;
+	std::cout << to_print << " - CHECK" << std::endl;
 	i = 0;
 	while ( ++i < 10 )
 		std::cout << "#";
@@ -415,8 +413,8 @@ int main ()
 	mit = test.end();
 	for( unsigned int i = 0; i < lst_size; i++)
 	{
-		std::cout << mit->first << "(" << mit->second << ") - " << std::endl;
 		mit--;
+		std::cout << mit->first << "(" << mit->second << ") - " << std::endl;
 	}
 
 	std::cout << std::endl;
@@ -433,8 +431,8 @@ int main ()
 	mit = test.end();
 	for( unsigned int i = 0; i < lst_size; i++)
 	{
-		std::cout << mit->first << "(" << mit->second << ") - " << std::endl;
 		--mit;
+		std::cout << mit->first << "(" << mit->second << ") - " << std::endl;
 	}
 
 
@@ -452,43 +450,8 @@ int main ()
 	mrit = test.rend();
 	for( unsigned int i = 0; i < lst_size; i++)
 	{
-		std::cout << mrit->first << "(" << mrit->second << ") - " << std::endl;
 		mrit--;
+		std::cout << mrit->first << "(" << mrit->second << ") - " << std::endl;
 	}
-
-
-
-
-	//tree->insert_node(std::make_pair(1,"un"));
-	//tree->insert_node(std::make_pair(4,"quatre"));
-	//tree->insert_node(std::make_pair(12, "douze"));
-	//tree->insert_node(std::make_pair(2, "deux"));
-	//tree->insert_node(std::make_pair(6, "six"));
-	//tree->insert_node(std::make_pair(10, "dix"));
-	//tree->insert_node(std::make_pair(14, "quatorze"));
-	//tree->insert_node(std::make_pair(3, "trois"));
-	//tree->insert_node(std::make_pair(5, "cinq"));
-	//tree->insert_node(std::make_pair(7, "sept"));
-	//tree->insert_node(std::make_pair(9, "neuf"));
-	//tree->insert_node(std::make_pair(11, "onze"));
-	//tree->insert_node(std::make_pair(13, "treize"));
-	//tree->insert_node(std::make_pair(15, "quinze"));
-	//tree->inorder_walk();
-	//std::cout << std::endl;
-	////tree->inorder_walk();
-	//tree->delete_node(std::make_pair(15, "quinze"));
-	//tree->inorder_walk();
-	////tree->inorder_walk();
-	//std::cout << std::endl;
-
-	//rbt<type>::node_pointer ptr = tree->minimum();
-	//for (rbt<type>::iterator it(ptr); it != tree->get_t_null(); it++)
-	//{
-	//	std::cout << "it = " <<  it->first << std::endl;
-	//}
-	//std::cout << std::endl;
-	//std::cout << std::endl;
-	//tree->inorder_walk();
 	return 0;
-
 }
