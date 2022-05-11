@@ -6,13 +6,18 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/19 06:35:48 by csejault         ###   ########.fr       */
+/*   Updated: 2022/05/11 13:56:41 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_containers.hpp"
+#include <list>
+# if !defined(LIB)
+#  define LIB ft
+# else
+#  define LIB std
+# endif /* !defined(STD) */
 
-namespace LIB = ft;
 
 void	print_title(std::string to_print)
 {
@@ -32,7 +37,7 @@ bool mypredicate (int i, int j) {
 	return (i==j);
 }
 
-template <class K, class V>
+	template <class K, class V>
 void print_map_ref(LIB::map<K,V> &vct)
 {
 	typename LIB::map<K,V>::iterator it = vct.begin();
@@ -51,7 +56,7 @@ void print_map_ref(LIB::map<K,V> &vct)
 	std::cout << std::endl;
 }
 
-template <class K, class V>
+	template <class K, class V>
 void print_map_noref(LIB::map<K,V> vct)
 {
 	typename LIB::map<K,V>::iterator it = vct.begin();
@@ -71,8 +76,8 @@ void print_map_noref(LIB::map<K,V> vct)
 }
 
 
-template <class k, class v>
-	void check_map_insert_val(LIB::map<k,v>& MapToInsert, LIB::pair<k,v> p)
+	template <class k, class v>
+void check_map_insert_val(LIB::map<k,v>& MapToInsert, LIB::pair<k,v> p)
 {
 	LIB::pair<typename LIB::map<k,v>::iterator, bool> check = MapToInsert.insert(p);
 	std::cout << "Insert : " << p.first << std::endl;
@@ -327,7 +332,7 @@ int main ()
 	print_map_ref<k,v>(m3);
 	print_map_noref<k,v>(m3);
 
-	
+
 	std::cout << "k 3 value " << m[3] << std::endl;
 	std::cout << "find [3] - " << m.find(3)->second << std::endl;
 	std::cout << "modif [3]" << std::endl;
@@ -361,6 +366,95 @@ int main ()
 	for (LIB::pair<map_t::iterator, map_t::iterator> it = m.equal_range(7); it.first != it.second; it.first++) {std::cout << "equal range first = " << (it.first)->first << std::endl;}
 	map_t::const_iterator cit;
 	cit = m.end();
+
+	typedef float T1;
+	typedef unsigned int T2;
+	typedef LIB::pair<T1,T2>	T3;
+	typedef LIB::map<T1, T2>	map_f;
+
+	std::list<T3> lst;
+	unsigned int lst_size = 10;
+	for (unsigned int i = 0; i < lst_size; ++i)
+		lst.push_back(T3(2.5 - i, (i + 1) * 7));
+
+	map_f test(lst.begin(), lst.end());
+	print_map_noref<float,unsigned int>(test);
+	print_map_ref<float,unsigned int>(test);
+
+	//std::cout << "=== tree ===" << std::endl;
+	//std::cout << "root: ";
+	//test._tree->get_root()->print_data();
+
+	//std::cout << "root left ";
+	//test._tree->get_root()->left->print_data();
+
+	//std::cout << "root predecessor ";
+	//test._tree->get_root()->predecessor()->print_data();
+
+	//std::cout << "t_null: ";
+	//test._tree->get_t_null()->print_data();
+	//test._tree->inorder_walk();
+	//if (test._tree->get_root() == test._tree->get_t_null())
+	//	std::cout << "root = tnull" << std::endl;
+	//else
+	//	std::cout << "root != tnull" << std::endl;
+	//std::cout << "=== end_tree ===" << std::endl;
+
+
+	map_f::const_iterator mit(test.begin());
+	std::cout << std::endl;
+	std::cout << "MIT beg" << std::endl;
+	for( unsigned int i = 0; i < lst_size; i++)
+	{
+		std::cout << mit->first << "(" << mit->second << ") - " << std::endl;
+		mit++;
+	}
+
+	std::cout << std::endl;
+	std::cout << "MIT end" << std::endl;
+	mit = test.end();
+	for( unsigned int i = 0; i < lst_size; i++)
+	{
+		std::cout << mit->first << "(" << mit->second << ") - " << std::endl;
+		mit--;
+	}
+
+	std::cout << std::endl;
+	std::cout << "MIT beg" << std::endl;
+	mit = test.begin();
+	for( unsigned int i = 0; i < lst_size; i++)
+	{
+		std::cout << mit->first << "(" << mit->second << ") - " << std::endl;
+		++mit;
+	}
+
+	std::cout << std::endl;
+	std::cout << "MIT end" << std::endl;
+	mit = test.end();
+	for( unsigned int i = 0; i < lst_size; i++)
+	{
+		std::cout << mit->first << "(" << mit->second << ") - " << std::endl;
+		--mit;
+	}
+
+
+	std::cout << std::endl;
+	std::cout << "MRIT beg" << std::endl;
+	map_f::const_reverse_iterator mrit(test.rbegin());
+	for( unsigned int i = 0; i < lst_size; i++)
+	{
+		std::cout << mrit->first << "(" << mrit->second << ") - " << std::endl;
+		mrit++;
+	}
+	std::cout << std::endl;
+
+	std::cout << "MRIT end" << std::endl;
+	mrit = test.rend();
+	for( unsigned int i = 0; i < lst_size; i++)
+	{
+		std::cout << mrit->first << "(" << mrit->second << ") - " << std::endl;
+		mrit--;
+	}
 
 
 

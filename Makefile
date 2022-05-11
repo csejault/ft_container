@@ -6,7 +6,7 @@
 #    By: csejault <csejault@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/11 11:59:05 by csejault          #+#    #+#              #
-#    Updated: 2022/04/08 15:58:30 by csejault         ###   ########.fr        #
+#    Updated: 2022/05/11 14:00:11 by csejault         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,9 @@ SOURCES_DIR		=	srcs/
 
 INCLUDES		= 	-I include -I .
 
-DEFINE_STD		=	-D LIB_TO_USE=std -D LIB_TO_USE_STR="std"
+DEFINE_STD		=	-D LIB="std"
+
+DEFINE_FT		=	-D LIB="ft"
 
 SOURCES_NAME	= 	\
 					main
@@ -62,15 +64,15 @@ CPPFLAGS		=	-Wall -Werror -Wextra -std=c++98 -MMD -MP $(DEBUG) $(INCLUDES)
 #	$^	=	every dependances
 
 .cpp.o:			
-				$(CPP) $(CPPFLAGS) $(DEFINE_STD) -c $< -o $(<:.cpp=.o)
+				$(CPP) $(CPPFLAGS) -c $< -o $(<:.cpp=.o)
 
 all:			$(NAME) 
 
 std:			$(OBJECTS)
-					$(CPP) $(CPPFLAGS) $(DEFINE_STD) $^ -o $@
+					$(CPP) $(CPPFLAGS) $(DEFINE_STD) $^ -o ${NAME}
 
 $(NAME):		$(OBJECTS)
-					$(CPP) $(CPPFLAGS) $^ -o $@
+					$(CPP) $(CPPFLAGS) $(DEFINE_FT) $^ -o $@
 
 clean:			
 					rm -f $(OBJECTS) $(DEPEND)

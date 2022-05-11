@@ -7,18 +7,18 @@ if [[ $# -eq 0 ]]
 then
 	clear
 	cat $MAIN_FT > $MAIN_MAKEFILE
-	#make re && valgrind --leak-check=full ./ft_containers
-	make re && valgrind -s --leak-check=full --show-leak-kinds=all ./ft_containers
+	make && valgrind -s --leak-check=full --show-leak-kinds=all ./ft_containers
+	make fclean
 	exit
 else
 
 	clear
 	cat $MAIN_FT > $MAIN_MAKEFILE
-	make re && ./ft_containers >.ft_result.txt
+	make && ./ft_containers >.ft_result.txt
+	make fclean
 
-	sed s/"LIB_NAME = ft"/"LIB_NAME = std"/g $MAIN_FT > $MAIN_MAKEFILE
-	sed s/"namespace LIB = ft"/"namespace LIB = std"/g -i $MAIN_MAKEFILE
-	make re && ./ft_containers >.std_result.txt
+	cat $MAIN_FT > $MAIN_MAKEFILE
+	make std && ./ft_containers >.std_result.txt
 	make fclean
 
 	vimdiff .ft_result.txt .std_result.txt && echo "DIFF OK"
