@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 12:22:05 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/25 20:08:48 by csejault         ###   ########.fr       */
+/*   Updated: 2022/05/11 16:49:41 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef ITERATOR_HPP
@@ -75,6 +75,11 @@ namespace ft {
 				explicit reverse_iterator( iterator_type x ) : _ptr(x) { }
 				template< class U >
 					reverse_iterator( const reverse_iterator<U>& other ) : _ptr(other.base()) { }
+				template< class U >
+					reverse_iterator& operator=( const reverse_iterator<U>& other )
+					{
+						_ptr = other.base();
+					}
 
 				~reverse_iterator( void ) {};
 
@@ -93,7 +98,7 @@ namespace ft {
 				reverse_iterator	operator--( int ) { reverse_iterator to_ret = *this; operator--(); return to_ret; }
 
 				reverse_iterator 	operator+( const difference_type & nb ) const {return reverse_iterator(_ptr - nb); }
-			
+
 				reverse_iterator &	operator+=( const difference_type & nb ) { _ptr = _ptr -nb; return *this;}
 
 				reverse_iterator 	operator-( const difference_type & nb ) const { return reverse_iterator(_ptr + nb); }
@@ -111,18 +116,18 @@ namespace ft {
 				typename reverse_iterator<Iterator>::difference_type n,
 				const reverse_iterator<Iterator>& rev_it)
 		{
-				return (reverse_iterator<Iterator>(rev_it.base() - n));
+			return (reverse_iterator<Iterator>(rev_it.base() - n));
 		}
 
 	template <class L_Iterator, class R_Iterator>
-  typename reverse_iterator<L_Iterator>::difference_type operator- (
-    const reverse_iterator<L_Iterator>& lhs,
-    const reverse_iterator<R_Iterator>& rhs)
-	{
-				return (rhs.base() - lhs.base());
+		typename reverse_iterator<L_Iterator>::difference_type operator- (
+				const reverse_iterator<L_Iterator>& lhs,
+				const reverse_iterator<R_Iterator>& rhs)
+		{
+			return (rhs.base() - lhs.base());
 		}
 
-	
+
 	template <class L_Iterator, class R_Iterator>
 		bool operator== (const reverse_iterator<L_Iterator>& lhs,
 				const reverse_iterator<R_Iterator>& rhs)
