@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 16:18:35 by csejault          #+#    #+#             */
-/*   Updated: 2022/04/06 12:00:42 by csejault         ###   ########.fr       */
+/*   Updated: 2022/05/12 11:03:55 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define FT_CONTAINERS_HPP
 #include "utility.hpp"
 #include <utility>      // std::pair, std::make_pair
+
+#include "set.hpp"
+#include <set>
 
 #include "map.hpp"
 #include <map>      

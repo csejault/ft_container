@@ -6,7 +6,7 @@
 /*   By: csejault <csejault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 14:45:07 by csejault          #+#    #+#             */
-/*   Updated: 2022/05/11 19:11:21 by csejault         ###   ########.fr       */
+/*   Updated: 2022/05/12 11:17:00 by csejault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -453,5 +453,54 @@ int main ()
 		mrit--;
 		std::cout << mrit->first << "(" << mrit->second << ") - " << std::endl;
 	}
+
+
+
+
+	typedef LIB::set<int>		set_f;
+	set_f test_set;
+
+	for (int i = 0; i < 10; i++)
+		test_set.insert(i);
+
+	set_f::const_iterator mit_set(test_set.begin());
+	std::cout << std::endl;
+	std::cout << "MIT_SET beg" << std::endl;
+	mit_set = test_set.begin();
+	for( unsigned int i = 0; i < lst_size; i++)
+	{
+		std::cout << *mit_set << std::endl;
+		++mit_set;
+	}
+
+	std::cout << std::endl;
+	std::cout << "MIT_SET end" << std::endl;
+	mit_set = test_set.end();
+	for( unsigned int i = 0; i < lst_size; i++)
+	{
+		--mit_set;
+		std::cout << *mit_set << std::endl;
+	}
+
+
+	std::cout << std::endl;
+	std::cout << "MRIT_SET beg" << std::endl;
+	set_f::const_reverse_iterator mrit_set(test_set.rbegin());
+	for( unsigned int i = 0; i < lst_size; i++)
+	{
+		std::cout << *mrit_set << std::endl;
+		mrit_set++;
+	}
+	std::cout << std::endl;
+
+	std::cout << "MRIT_SET end" << std::endl;
+	mrit_set = test_set.rend();
+	for( unsigned int i = 0; i < lst_size; i++)
+	{
+		mrit_set--;
+		std::cout << *mrit_set << std::endl;
+	}
+
+
 	return 0;
 }
